@@ -26,8 +26,8 @@
 #
 # Если токен удалось раскодировать, и роль соответствует ожидаемой
 # декорируемая функция должна быть выполнена.
-
-from flask import Flask
+import jwt
+from flask import Flask, request, abort
 from flask_restx import Api, Resource
 
 algo = 'HS256'
@@ -35,7 +35,26 @@ secret = 's3cR$eT'
 
 def admin_required(func):
     # TODO Ваш вариант решения здесь
-    pass
+
+    def wrapper(*args, **kwargs):
+
+        if "Authorization" not in request.headers:
+            abort(401)
+
+        data = request.headers["Authorization"].split("Bearer ")[-1]
+        try:
+            data = jwt.decode(data, secret, algorithms=[algo])
+
+        except jwt.exceptions.PyJWTError:
+            abort(401)
+
+        role = data.get("role", None)
+        if not role or role != "admin":
+            abort(403)
+
+        return func(*args, **kwargs)
+
+    return wrapper
 
 # Ниже следует код инициализации фласк приложения.
 # Из которого следует что GET-запрос на адрес books могут делать все

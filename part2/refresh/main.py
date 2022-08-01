@@ -8,12 +8,31 @@
 # 3. времени действия токена ('exp')
 # Время действия access токена должно составлять 30 с момента получения
 # Время действия refresh токена - 130 дней c момента получения
+import calendar
+import datetime
+
+import jwt
+
+SECRET = "s3cR$eT"
+ALGO = "HS256"
 
 user_obj = {
     "username": 'test_user',
     "role": 'admin'
 }
 
+
 def generate_jwt(user_obj):
     # TODO напишите Ваш код здесь
-    pass
+
+    min30 = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+    days100 = datetime.datetime.utcnow() + datetime.timedelta(days=100)
+
+    user_obj["exp"] = calendar.timegm(min30.timetuple())
+    access_token = jwt.encode(user_obj, SECRET, algorithm=ALGO)
+    user_obj["exp"] = calendar.timegm(days100.timetuple())
+    refresh_token = jwt.encode(user_obj, SECRET, algorithm=ALGO)
+
+    return dict(access_token=access_token, refresh_token=refresh_token)
+
+

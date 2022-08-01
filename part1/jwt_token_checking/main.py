@@ -6,7 +6,13 @@
 # И возвращайть False, если токен декодировать не удалось.
 
 # В тестах мы проверим функцию,отправив ей верный и неверный токен.
+import jwt
+
 
 def check_token(token, secret, algorithms):
     # TODO напишите ваше решение здесь
-	pass
+    try:
+        return jwt.decode(token, secret, algorithms=algorithms)
+
+    except jwt.exceptions.PyJWTError:
+        return False

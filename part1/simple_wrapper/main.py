@@ -6,15 +6,25 @@
 
 
 # TODO напишите декратор jsonwrap здесь
+import json
+
+
+def jsonwrap(function):
+    def wrapper():
+        return json.dumps(function())
+
+    return wrapper
 
 
 # Ниже следует код для самопроверки:
 # TODO Вы можете попробовать задекорировать функцию func
 # которая возвращает словарь.
 
+@jsonwrap
 def func():
     return {'text': 'tasks',
             'author': 'skypro'}
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     func()

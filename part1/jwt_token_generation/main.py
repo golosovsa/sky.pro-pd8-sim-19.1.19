@@ -5,10 +5,26 @@
 # В качестве секрета используйте слово 's3cR$eT',
 # В качестве алгоритма формирования токена используйте 'HS256'.
 # Сгенерированный токен запишите в переменную access_token.
+import datetime
+import calendar
+
+import jwt
 
 data = {
-        "username": "Skypro",
-        "role": "admin"
-        }
+    "username": "Skypro",
+    "role": "admin"
+}
 
-#TODO напишите Ваш код здесь
+# TODO напишите Ваш код здесь
+
+SECRET = "s3cR$eT"
+ALGO = "HS256"
+
+
+def generate_token(token_data):
+    # min30 = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+    # token_data["EXP"] = calendar.timegm(min30.timetuple())
+    return jwt.encode(token_data, SECRET, algorithm=ALGO)
+
+
+access_token = generate_token(data)
